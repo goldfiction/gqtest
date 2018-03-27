@@ -17,5 +17,5 @@ it "should be able to run test cases",(done)=>
   testManager.add("f1 should work",testApp.tests['f1'])
   testManager.add("f2 should work",testApp.tests['f2'])
   testManager.run null,(e,result)=>
-    assert(result.total==2)
+    assert(result.result.total==2)
     done(e)

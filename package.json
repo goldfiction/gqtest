@@ -3,7 +3,7 @@
   "description":"gqtest is a small testing framework built for functionjs. See \/test.coffee for usage.",
   "repository":"git@github.com:goldfiction/gqtest.git",
   "main":"./main.js",
-  "version":"0.0.6",
+  "version":"0.0.7",
   "private":false,
   "license":"MIT",
   "scripts":{

@@ -16,7 +16,7 @@ runTest=function(name,cb){
         total:0,
         pass:0,
         fail:0
-    }
+    };
 
     function done(e,cb){
         result.total++;
@@ -29,22 +29,23 @@ runTest=function(name,cb){
             log+="\nTest Case Passed.";
             result.pass++
         }
-        console.log(log)
+        console.log(log);
         cb()
     }
 
     if(name) {
         try{
             process.on('uncaughtException', function(err) {
-                console.log(err)
+                console.log(err);
                 log+=JSON.stringify(err,null,2)
-            })
+            });
 
-            console.log("\n"+name)
-            log+="\n"+name
+            console.log("\n"+name);
+            log+="\n"+name;
 
             tests[name].test(function(e,logging){
-                log+=(logging||"")
+                if(typeof logging=="string")
+                    log+=logging;
                 done(e,finish);
             });
         }catch(e){
@@ -54,8 +55,11 @@ runTest=function(name,cb){
     else{
         async.eachOfSeries(tests,function(test,name,cb){
             try{
-                console.log("\n"+name)
-                test(function(e){
+                console.log("\n"+name);
+                log+=("\n"+name);
+
+                test(function(e,logging){
+                    log+=(logging||"");
                     done(e,cb);
                 })
             }catch(e){
@@ -67,7 +71,7 @@ runTest=function(name,cb){
     }
 
     function finish(){
-        console.log(result)
+        console.log(result);
         try{
             cb(null,{log:log,result:result});
         }catch(e){}
