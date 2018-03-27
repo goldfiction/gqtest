@@ -36,8 +36,14 @@ runTest=function(name,cb){
 
     if(name) {
         try{
+            process.on('error',function(e){
+                console.log(e)
+                log+="\n"+JSON.stringify(e,null,2)
+            })
             console.log("\n"+name)
-            tests[name].test(function(e){
+            log+="\n"+name
+            tests[name].test(function(e,logging){
+                log+=logging||""
                 done(e,finish);
             });
         }catch(e){
