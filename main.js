@@ -62,7 +62,7 @@ runTest=function(name,cb){
     function finish(){
         console.log(result)
         try{
-            cb(null,result);
+            cb(null,{log:log,result:result});
         }catch(e){}
     }
 };
