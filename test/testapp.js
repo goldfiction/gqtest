@@ -24,4 +24,4 @@ f2.test=function(done){
 
 exports.f1=f1
 exports.f2=f2
-exports.tests={"f1":f1,"f2":f2}
+exports.tests={"f1":f1.test,"f2":f2.test}

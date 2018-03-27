@@ -48,7 +48,7 @@ runTest=function(name,cb){
         async.eachOfSeries(tests,function(test,name,cb){
             try{
                 console.log("\n"+name)
-                test.test(function(e){
+                test(function(e){
                     done(e,cb);
                 })
             }catch(e){
