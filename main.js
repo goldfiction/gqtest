@@ -43,9 +43,13 @@ runTest=function(name,cb){
             console.log("\n"+name);
             log+="\n"+name;
 
-            tests[name].test(function(e,logging){
-                if(typeof logging=="string")
-                    log+=logging;
+            debug=function(text){
+                if(typeof text=="object")
+                    log+=JSON.stringify(text)+"\n"
+                else
+                    log+=text.toString()+"\n"
+            }
+            tests[name].test(function(e){
                 done(e,finish);
             });
         }catch(e){
