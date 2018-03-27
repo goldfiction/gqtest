@@ -19,7 +19,6 @@ runTest=function(name,cb){
     }
 
     function done(e,cb){
-        log="";
         result.total++;
         if(e){
             log+=JSON.stringify(e,null,2);
