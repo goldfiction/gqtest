@@ -35,14 +35,16 @@ runTest=function(name,cb){
 
     if(name) {
         try{
-            process.on('error',function(e){
-                console.log(e)
-                log+="\n"+JSON.stringify(e,null,2)
+            process.on('uncaughtException', function(err) {
+                console.log(err)
+                log+=JSON.stringify(err,null,2)
             })
+
             console.log("\n"+name)
             log+="\n"+name
+
             tests[name].test(function(e,logging){
-                log+=logging||""
+                log+=(logging||"")
                 done(e,finish);
             });
         }catch(e){
