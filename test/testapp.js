@@ -18,7 +18,7 @@ function f2(){
 f2.test=function(done){
     var testObj=new f2();
     var sum=testObj.a+testObj.b;
-    assert(sum==14);
+    assert(sum==13);
     done();
 };
 

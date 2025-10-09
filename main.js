@@ -1,6 +1,7 @@
 var tests={};
 var assert=require('assert');
 var async=require('async');
+var chalk=require('chalk');
 
 addTest=function(name,test){
     tests[name]=test;
@@ -82,7 +83,30 @@ runTest=function(name,cb){
     }
 };
 
+printResult=function(error,result){
+  if(error){
+    console.error(error.stack);
+  }
+  var hay=result.log.split('\n');
+  for(i of hay){
+    if(i.toLowerCase().includes('passed'))
+      console.log(chalk.green.bold(i));
+    else
+      console.log(chalk.yellow.bold(i));
+  }
+  if(result.result.total==result.result.pass)
+  {
+    console.log(chalk.green.bold(JSON.stringify(result.result,null,2)));
+    console.log(chalk.green.bold("All tests passed"));
+  }
+  else
+  {
+    console.log(chalk.red.bold(JSON.stringify(result.result,null,2)));
+  }
+}
+
 exports.add=addTest;
 exports.remove=removeTest;
 exports.run=runTest;
 exports.tests=tests;
+exports.printResult=printResult;
