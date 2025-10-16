@@ -18,16 +18,18 @@ runTest=function(name,cb){
         pass:0,
         fail:0
     };
+    var tstart=Date.now()
+    var timeout=20000;
 
-    function done(e,cb){
+    function done(e,cb,elap){
         result.total++;
         if(e){
-            log+=e.stack
-            log+="\n-> Test Case Failed.";
+            log+="\n"+e.stack
+            log+="\n-> Test Case Failed. "+"("+elap+")";
             result.fail++
         }
         else{
-            log+="\n-> Test Case Passed.";
+            log+="\n-> Test Case Passed. "+"("+elap+")";
             result.pass++
         }
         //console.log(log);
@@ -35,6 +37,7 @@ runTest=function(name,cb){
     }
 
     if(name) {
+        var startTime=Date.now()
         try{
             process.on('uncaughtException', function(err) {
                 console.log(err.stack);
@@ -51,10 +54,14 @@ runTest=function(name,cb){
                     log+=text.toString()+"\n"
             }
             tests[name].test(function(e){
-                done(e,finish);
+                var endTime=Date.now()
+                var elap=endTime-startTime;
+                done(e,finish,elap);
             });
         }catch(e){
-            done(e,finish);
+            var endTime=Date.now()
+            var elap=endTime-startTime;
+            done(e,finish,elap);
         }
     }
     else{
@@ -62,13 +69,17 @@ runTest=function(name,cb){
             try{
                 //console.log("\n"+name);
                 log+=("\n"+name);
-
+                var startTime=Date.now()
                 test(function(e,logging){
+                    var endTime=Date.now()
+                    var elap=endTime-startTime
                     log+=(logging||"");
-                    done(e,cb);
+                    done(e,cb,elap);
                 })
             }catch(e){
-                done(e,cb);
+                var endTime=Date.now()
+                var elap=endTime-startTime
+                done(e,cb,elap);
             }
         },function(e,r){
             finish()
@@ -76,10 +87,15 @@ runTest=function(name,cb){
     }
 
     function finish(){
+        var tend=Date.now()
+        var telap=tend-tstart
+        result.time=telap
         //console.log(result);
         try{
             cb(null,{log:log,result:result});
-        }catch(e){}
+        }catch(e){
+            cb(e);
+        }
     }
 };
 
