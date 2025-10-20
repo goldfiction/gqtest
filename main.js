@@ -4,25 +4,34 @@ var async = require('async');
 var chalk = require('chalk');
 
 var util = require('util');
-var debuglog = util.debuglog;
-debuglog(function (set) {
+var debug = require('debug')
+// var debuglog = util.debuglog;
+// this come from this discussion
+// https://stackoverflow.com/questions/38962957/how-to-enable-node-debug-without-environment-variables
+/*
+debuglogFormatted = debuglog(function (set) {
     pid = process.pid;
     msg = util.format.apply(util, arguments);
     console.error('%s %d: %s', set, pid, msg);
 })
+*/
 
-// use "NODE_DEBUG=gqtest node app.js" to inspect verbosely
-// use "NODE_DEBUG=* node app.js" to inspect with absolutely full verbosity
-debuglog("gqtest");
+// use "NODE_DEBUG=gqtest node app.js" to inspect test verbosely
+// use "NODE_DEBUG=* node app.js" to inspect all log verbosely
+// or enable this line to enable verbose debug logging
+// debug.enable('gqtest*')
+var deb = debug("gqtest")
+dlog = util.debuglog("gqtest");
 
-log = function (str) {
-    if (exports.DEBUG_MODE == "dev")
-        console.log(str);
-}
-alog = log;
 clog = function (str) {
     console.log(str);
 }
+log = function (str) {
+    if (exports.DEBUG_MODE == "dev") {
+        deb(str);
+    }
+}
+alog = log;
 
 addTest = function (name, test) {
     tests[name] = test;
@@ -35,14 +44,13 @@ removeTest = function (name) {
 runTest = function (name, cb) {
     var log = "";
 
-    debug = function (text) {
+    de = function (text) {
+        //clog(typeof text)
         if (typeof text == "object")
             log += JSON.stringify(text, null, 2) + "\n"
         else
             log += text.toString() + "\n"
     }
-
-    de = debug;
 
     var result = {
         total: 0,
@@ -57,6 +65,8 @@ runTest = function (name, cb) {
         if (e) {
             de("\n");
             de(e.stack);
+            //if (exports.DEBUG_MODE != "dev")
+            //    clog(e.stack);
             de("\n-> Test Case Failed. " + "(" + elap + ")");
             result.fail++
         }
@@ -65,16 +75,16 @@ runTest = function (name, cb) {
             result.pass++
         }
         //console.log(log);
-        cb()
+        cb(e)
     }
 
     if (name) {
         var startTime = Date.now()
         try {
 
-            process.on('uncaughtException', function (err) {
-                alog(err.stack);
-                de(err.stack)
+            process.on('uncaughtException', function (e) {
+                clog(e.stack);
+                de(e.stack)
             });
 
             //console.log("\n"+name);
@@ -97,7 +107,7 @@ runTest = function (name, cb) {
                 var startTime = Date.now()
                 try {
                     exports.staging.before(function () {
-                        alog("\n test case " + name + " is ran");
+                        clog(chalk.yellow.bold("\n test case " + name + " is ran"));
                         de("\n" + name);
                         var startTime = Date.now()
                         test(function (e, logging) {
@@ -116,19 +126,19 @@ runTest = function (name, cb) {
                 }
             }, function (e, r) {
                 exports.staging.afterAll(function () {
-                    finish()
+                    finish(e, r)
                 })
             })
         })
     }
 
-    function finish() {
+    function finish(e, r) {
         var tend = Date.now()
         var telap = tend - tstart
         result.time = telap
         //console.log(result);
         try {
-            return cb(null, { log: log, result: result });
+            return cb(e, { log: log, result: result });
         } catch (e) {
             return cb(e);
         }
@@ -137,7 +147,7 @@ runTest = function (name, cb) {
 
 printResult = function (error, result) {
     if (error) {
-        console.error(error.stack);
+        clog(chalk.red.bold(error.stack));
     }
     var hay = result.log.split('\n');
     for (i of hay) {
@@ -157,7 +167,7 @@ printResult = function (error, result) {
 
 printMinResult = function (error, result) {
     if (error) {
-        console.error(error.stack);
+        clog(chalk.red.bold(error.stack));
         clog(chalk.red.bold(JSON.stringify(result.result, null, 2).replace(/[{}]/g, '')));
     } else {
         clog(chalk.green.bold(JSON.stringify(result.result, null, 2).replace(/[{}]/g, '')));
@@ -215,6 +225,9 @@ exports.staging.beforeAll = function (done) { done() };
 exports.staging.afterAll = function (done) { done() };
 
 exports.log = log;
+exports.debug = debug;
+exports.deb = deb;
+
 exports.assert = assert;
 exports.tests = tests;
 exports.async = async;
