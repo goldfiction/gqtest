@@ -3,8 +3,8 @@ global.testManager=require "./../main.js"
 testApp=require "./testapp.js"
 
 # this simulates prod mode
-# use testManager.env="dev" for verbose logging
-# testManager.env="prod";
+# use testManager.DEBUG_MODE="dev" (default) for verbose logging
+# testManager.DEBUG_MODE="prod";
 
 it "should be able to add test case",(done)=>
   testManager.add("f1_test",testApp.tests['f1'])

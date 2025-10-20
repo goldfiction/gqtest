@@ -3,8 +3,20 @@ var assert = require('assert');
 var async = require('async');
 var chalk = require('chalk');
 
+var util = require('util');
+var debuglog = util.debuglog;
+debuglog(function (set) {
+    pid = process.pid;
+    msg = util.format.apply(util, arguments);
+    console.error('%s %d: %s', set, pid, msg);
+})
+
+// use "NODE_DEBUG=gqtest node app.js" to inspect verbosely
+// use "NODE_DEBUG=* node app.js" to inspect with absolutely full verbosity
+debuglog("gqtest");
+
 log = function (str) {
-    if (exports.env == "dev")
+    if (exports.DEBUG_MODE == "dev")
         console.log(str);
 }
 alog = log;
@@ -193,7 +205,7 @@ exports.printResult = printResult;
 exports.printMinResult = printMinResult;
 
 // change this to production will not show log
-exports.env = "dev";
+exports.DEBUG_MODE = "dev";
 
 exports.staging = {}
 // these are stub stagings. Override these for custom behavior
