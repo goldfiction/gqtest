@@ -27,8 +27,10 @@ clog = function (str) {
     console.log(str);
 }
 log = function (str) {
-    if (exports.DEBUG_MODE == "dev") {
-        deb(str);
+    if (deb.enabled) {
+        deb(str)
+    } else if (exports.DEBUG_MODE == "dev") {
+        clog(str);
     }
 }
 alog = log;
@@ -147,7 +149,7 @@ runTest = function (name, cb) {
 
 printResult = function (error, result) {
     if (error) {
-        clog(chalk.red.bold(error.stack));
+        // clog(chalk.red.bold(error.stack));
     }
     var hay = result.log.split('\n');
     for (i of hay) {
@@ -167,7 +169,7 @@ printResult = function (error, result) {
 
 printMinResult = function (error, result) {
     if (error) {
-        clog(chalk.red.bold(error.stack));
+        // clog(chalk.red.bold(error.stack));
         clog(chalk.red.bold(JSON.stringify(result.result, null, 2).replace(/[{}]/g, '')));
     } else {
         clog(chalk.green.bold(JSON.stringify(result.result, null, 2).replace(/[{}]/g, '')));
