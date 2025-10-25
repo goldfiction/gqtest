@@ -77,7 +77,7 @@ runTest = function (name, cb) {
             result.pass++
         }
         //console.log(log);
-        cb(e)
+        cb()
     }
 
     if (name) {
@@ -95,12 +95,12 @@ runTest = function (name, cb) {
             tests[name].test(function (e) {
                 var endTime = Date.now()
                 var elap = endTime - startTime;
-                done(e, finish, elap);
+                return done(e, finish, elap);
             });
         } catch (e) {
             var endTime = Date.now()
             var elap = endTime - startTime;
-            done(e, finish, elap);
+            return done(e, finish, elap);
         }
     }
     else {
@@ -117,18 +117,18 @@ runTest = function (name, cb) {
                             var elap = endTime - startTime
                             de(logging || "");
                             exports.staging.after(function () {
-                                done(e, cb, elap);
+                                return done(e, cb, elap);
                             })
                         })
                     })
                 } catch (e) {
                     var endTime = Date.now()
                     var elap = endTime - startTime
-                    done(e, cb, elap);
+                    return done(e, cb, elap);
                 }
             }, function (e, r) {
                 exports.staging.afterAll(function () {
-                    finish(e, r)
+                    return finish(e, r)
                 })
             })
         })
