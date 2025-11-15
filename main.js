@@ -2,6 +2,7 @@ var tests = {};
 var assert = require('assert');
 var async = require('async');
 var chalk = require('chalk');
+var gqdone = require('gqdone');
 
 var util = require('util');
 var debug = require('debug')
@@ -105,6 +106,11 @@ runTest = function (name, cb) {
     }
     else {
         exports.staging.beforeAll(function () {
+            currdate = new Date(); // Current date and time
+            localeString = currdate.toLocaleString('en-CA',{});
+            de("Commandline: "+process.argv.join(" ")+"\n");
+            de("Time: "+localeString+"\n")
+            de("----"+"\n")
             async.eachOfSeries(tests, function (test, name, cb) {
                 var startTime = Date.now()
                 try {
@@ -139,6 +145,11 @@ runTest = function (name, cb) {
         var telap = tend - tstart
         result.time = telap
         //console.log(result);
+        try {
+            setTimeout(function(){
+                gqdone.done(log);
+            },10);
+        } catch (e) { }
         try {
             return cb(e, { log: log, result: result });
         } catch (e) {

@@ -1,17 +1,18 @@
 {
   "name": "gqtest",
-  "description": "gqtest is a small testing framework built for function.js. See \/test.coffee for usage.",
+  "description": "gqtest is a small testing framework built for function.js. See /test.coffee for usage.",
   "repository": "git@github.com:goldfiction/gqtest.git",
   "main": "main.js",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "private": false,
   "license": "MIT",
   "scripts": {
     "test": "mocha -t 20000 --require coffeescript/register test/test.coffee"
   },
   "dependencies": {
-    "async": "1.0.0",
     "assert": "1.0.0",
-    "chalk": "4.1.2"
+    "async": "1.0.0",
+    "chalk": "4.1.2",
+    "gqdone": ">=0.0.5"
   }
 }
