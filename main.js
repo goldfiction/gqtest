@@ -148,6 +148,8 @@ runTest = function (name, cb) {
         try {
             setTimeout(function(){
                 gqdone.done(log);
+                if(e)
+                    gqdone.done(JSON.stringify(e, null, 2));
             },10);
         } catch (e) { }
         try {
