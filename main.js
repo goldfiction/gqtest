@@ -204,10 +204,14 @@ doRun = function (name, cb) {
     if (!name) {
         runTest(null, function (e, r) {
             printResult(e, r);
-            return cb(e, r);
+            cb(e, r);
+            setTimeout(function() {
+                process.exit(e);                
+            },1)
+            return !e;
         })
     } else {
-        return cb();
+        cb();
     }
 }
 
