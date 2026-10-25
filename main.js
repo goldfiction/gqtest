@@ -150,7 +150,7 @@ runTest = function (name, cb) {
                 gqdone.done(log);
                 if(e)
                     gqdone.done(JSON.stringify(e, null, 2));
-            },10);
+            }, 10);
         } catch (e) { }
         try {
             return cb(e, { log: log, result: result });
@@ -205,10 +205,9 @@ doRun = function (name, cb) {
         runTest(null, function (e, r) {
             printResult(e, r);
             cb(e, r);
-            setTimeout(function() {
-                process.exit(e);                
-            },1)
-            return !e;
+            //setTimeout(function() {
+            //    process.exit(e);                
+            //},1)
         })
     } else {
         cb();
